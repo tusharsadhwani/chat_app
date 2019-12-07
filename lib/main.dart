@@ -17,6 +17,14 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: _defaultHome,
+      theme: ThemeData(
+        primarySwatch: Colors.purple,
+        textTheme: TextTheme(
+          button: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+      ),
       routes: {
         '/login': (_) => LoginPage(title: appName),
       },

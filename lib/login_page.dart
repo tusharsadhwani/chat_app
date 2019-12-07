@@ -39,6 +39,8 @@ class _LoginPageState extends State<LoginPage> {
               RaisedButton(
                 child: Text('Login'),
                 onPressed: () {},
+                color: Theme.of(context).primaryColor,
+                textColor: Theme.of(context).textTheme.button.color,
               )
             ],
           ),
