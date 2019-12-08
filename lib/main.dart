@@ -1,8 +1,8 @@
-import 'package:chat_app/providers/domain.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import './login_page.dart';
+import './providers/domain.dart';
 import './providers/token.dart';
 
 void main() => runApp(MyApp());
