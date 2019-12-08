@@ -29,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  void _login() async {
+  void _login(BuildContext context) async {
     if (!_formKey.currentState.validate()) {
       print("Invalid form");
       return;
@@ -41,13 +41,49 @@ class _LoginPageState extends State<LoginPage> {
     var domain = Provider.of<Domain>(context).domain;
     var username = _formData['username'].trim();
     var password = _formData['password'];
-    var response =
-        await http.get('$domain/login?username=$username&password=$password');
-    var data = jsonDecode(response.body) as Map<String, dynamic>;
-    print(data);
-    setState(() {
-      _disableButton = false;
-    });
+    try {
+      var response =
+          await http.get('$domain/login?username=$username&password=$password');
+      if (response.statusCode != 200) {
+        throw ArgumentError(
+            "Request returned with status code ${response.statusCode}");
+      }
+
+      var data = jsonDecode(response.body) as Map<String, dynamic>;
+      if (data.containsKey('error')) {
+        var errMsg =
+            data.containsKey('message') ? data['message'] : "An error occured";
+        throw ArgumentError(errMsg);
+      }
+      if (!data.containsKey('token')) {
+        throw ArgumentError("Missing token from response body");
+      }
+
+      var token = data['token'];
+      print(token);
+    } catch (e) {
+      _showAlert(e, context);
+    } finally {
+      setState(() {
+        _disableButton = false;
+      });
+    }
+  }
+
+  void _showAlert(e, BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text('Error'),
+        content: Text(e.toString()),
+        actions: [
+          FlatButton(
+            child: Text('OK'),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -86,7 +122,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 focusNode: _passwordFocusNode,
                 obscureText: true,
-                onFieldSubmitted: (_) => _login(),
+                onFieldSubmitted: (_) => _login(context),
                 validator: (value) {
                   if (value.length < 8) return "Password too short";
                   return null;
@@ -97,7 +133,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               RaisedButton(
                 child: Text('Login'),
-                onPressed: _disableButton ? null : _login,
+                onPressed: _disableButton ? null : () => _login(context),
                 color: Theme.of(context).primaryColor,
                 textColor: Theme.of(context).textTheme.button.color,
               ),

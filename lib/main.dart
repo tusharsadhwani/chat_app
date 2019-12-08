@@ -21,8 +21,12 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider.value(
-      value: Domain(_domainName),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(
+          value: Domain(_domainName),
+        ),
+      ],
       child: MaterialApp(
         home: _defaultHome,
         theme: ThemeData(
