@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:chat_app/chat_page.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
@@ -18,7 +19,6 @@ class _ChatsPageState extends State<ChatsPage> {
   @override
   void initState() {
     super.initState();
-    print('loading chats');
     Future.delayed(Duration.zero, () => _reloadChats(context));
   }
 
@@ -69,6 +69,14 @@ class _ChatsPageState extends State<ChatsPage> {
     );
   }
 
+  void _openChat(BuildContext context, int index) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+          builder: (_) => ChatPage(),
+          settings: RouteSettings(arguments: _chats[index])),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,9 +88,25 @@ class _ChatsPageState extends State<ChatsPage> {
         child: _chats != null
             ? ListView.builder(
                 itemCount: _chats.length,
-                itemBuilder: (_, index) => ListTile(
-                  title: Text(_chats[index][1] as String),
-                ),
+                itemBuilder: (_, index) {
+                  var _chatName = _chats[index][1] as String;
+                  return InkWell(
+                    onTap: () => _openChat(context, index),
+                    child: ListTile(
+                      title: Text(
+                        _chatName,
+                        style: TextStyle(
+                          fontSize: 18.0,
+                        ),
+                      ),
+                      leading: CircleAvatar(
+                        child: Text(
+                          _chatName.substring(0, 1),
+                        ),
+                      ),
+                    ),
+                  );
+                },
               )
             : Center(child: Text("No chats found")),
       ),
