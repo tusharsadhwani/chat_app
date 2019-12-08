@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
-
-class Domain with ChangeNotifier {
+class Domain {
   var _domain;
 
   Domain(String domain) {
