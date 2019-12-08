@@ -63,7 +63,9 @@ class _LoginPageState extends State<LoginPage> {
       var token = data['token'] as String;
       print("Token: $token");
       Provider.of<Token>(context).setToken(token);
+      Navigator.of(context).pushReplacementNamed('/chats');
     } catch (e) {
+      print(e);
       _showAlert(e, context);
     } finally {
       setState(() {
