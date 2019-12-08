@@ -83,6 +83,13 @@ class _ChatsPageState extends State<ChatsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Chats'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.add),
+            tooltip: 'Join Chat',
+            onPressed: () => Navigator.of(context).pushNamed('/joinchat'),
+          ),
+        ],
       ),
       body: RefreshIndicator(
         onRefresh: () => _reloadChats(context),

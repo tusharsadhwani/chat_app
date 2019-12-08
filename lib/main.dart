@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import './login_page.dart';
 import './signup_page.dart';
 import './chats_page.dart';
+import './join_chat_page.dart';
 import './providers/domain.dart';
 import './providers/token.dart';
 
@@ -47,6 +48,7 @@ class _MyAppState extends State<MyApp> {
           '/login': (_) => LoginPage(title: _appName),
           '/signup': (_) => SignupPage(title: _appName),
           '/chats': (_) => ChatsPage(),
+          '/joinchat': (_) => JoinChatPage(),
         },
         title: _appName,
       ),
