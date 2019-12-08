@@ -10,7 +10,30 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final GlobalKey _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
+  var _formData = Map<String, String>();
+  var _usernameFocusNode = FocusNode();
+  var _passwordFocusNode = FocusNode();
+  var _disableButton = false;
+
+  @override
+  void dispose() {
+    _usernameFocusNode.dispose();
+    _passwordFocusNode.dispose();
+    super.dispose();
+  }
+
+  void _login() {
+    if (!_formKey.currentState.validate()) {
+      print("Invalid form");
+      return;
+    }
+    _formKey.currentState.save();
+    setState(() {
+      _disableButton = true;
+    });
+    print(_formData);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,15 +53,36 @@ class _LoginPageState extends State<LoginPage> {
                 decoration: InputDecoration(
                   labelText: 'username',
                 ),
+                textInputAction: TextInputAction.next,
+                onFieldSubmitted: (_) =>
+                    FocusScope.of(context).requestFocus(_passwordFocusNode),
+                onSaved: (value) {
+                  _formData['username'] = value;
+                },
+                validator: (value) {
+                  if (value.trim().contains(RegExp(r'\W')))
+                    return "No whitespace allowed in username";
+                  return null;
+                },
               ),
               TextFormField(
                 decoration: InputDecoration(
                   labelText: 'password',
                 ),
+                focusNode: _passwordFocusNode,
+                obscureText: true,
+                onFieldSubmitted: (_) => _login(),
+                validator: (value) {
+                  if (value.length < 8) return "Password too short";
+                  return null;
+                },
+                onSaved: (value) {
+                  _formData['password'] = value;
+                },
               ),
               RaisedButton(
                 child: Text('Login'),
-                onPressed: () {},
+                onPressed: _disableButton ? null : _login,
                 color: Theme.of(context).primaryColor,
                 textColor: Theme.of(context).textTheme.button.color,
               )
