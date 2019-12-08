@@ -72,8 +72,9 @@ class _ChatsPageState extends State<ChatsPage> {
   void _openChat(BuildContext context, int index) {
     Navigator.of(context).push(
       MaterialPageRoute(
-          builder: (_) => ChatPage(),
-          settings: RouteSettings(arguments: _chats[index])),
+        builder: (_) => ChatPage(),
+        settings: RouteSettings(arguments: _chats[index]),
+      ),
     );
   }
 
