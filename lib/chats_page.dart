@@ -22,7 +22,7 @@ class _ChatsPageState extends State<ChatsPage> {
     Future.delayed(Duration.zero, () => _reloadChats(context));
   }
 
-  void _reloadChats(BuildContext context) async {
+  Future<void> _reloadChats(BuildContext context) async {
     var domain = Provider.of<Domain>(context).domain;
     var token = Provider.of<Token>(context).token;
     try {
@@ -75,14 +75,17 @@ class _ChatsPageState extends State<ChatsPage> {
       appBar: AppBar(
         title: Text('Chats'),
       ),
-      body: _chats != null
-          ? ListView.builder(
-              itemCount: _chats.length,
-              itemBuilder: (_, index) => ListTile(
-                title: Text(_chats[index][1] as String),
-              ),
-            )
-          : Center(child: Text("No chats found")),
+      body: RefreshIndicator(
+        onRefresh: () => _reloadChats(context),
+        child: _chats != null
+            ? ListView.builder(
+                itemCount: _chats.length,
+                itemBuilder: (_, index) => ListTile(
+                  title: Text(_chats[index][1] as String),
+                ),
+              )
+            : Center(child: Text("No chats found")),
+      ),
     );
   }
 }
