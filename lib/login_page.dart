@@ -1,4 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
+
+import './providers/domain.dart';
 
 class LoginPage extends StatefulWidget {
   final String title;
@@ -23,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  void _login() {
+  void _login() async {
     if (!_formKey.currentState.validate()) {
       print("Invalid form");
       return;
@@ -32,7 +38,16 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {
       _disableButton = true;
     });
-    print(_formData);
+    var domain = Provider.of<Domain>(context).domain;
+    var username = _formData['username'].trim();
+    var password = _formData['password'];
+    var response =
+        await http.get('$domain/login?username=$username&password=$password');
+    var data = jsonDecode(response.body) as Map<String, dynamic>;
+    print(data);
+    setState(() {
+      _disableButton = false;
+    });
   }
 
   @override
@@ -85,7 +100,7 @@ class _LoginPageState extends State<LoginPage> {
                 onPressed: _disableButton ? null : _login,
                 color: Theme.of(context).primaryColor,
                 textColor: Theme.of(context).textTheme.button.color,
-              )
+              ),
             ],
           ),
         ),

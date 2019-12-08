@@ -1,4 +1,6 @@
+import 'package:chat_app/providers/domain.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import './login_page.dart';
 
@@ -10,25 +12,32 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  static const appName = 'ChatApp';
-  var _defaultHome = LoginPage(title: appName);
+  /* ========================= SET THESE PROPERTIES ========================= */
+  static const _appName = 'ChatApp';
+  static const _domainName = 'https://api.example.com';
+  /* ======================================================================== */
+
+  var _defaultHome = LoginPage(title: _appName);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: _defaultHome,
-      theme: ThemeData(
-        primarySwatch: Colors.purple,
-        textTheme: TextTheme(
-          button: TextStyle(
-            color: Colors.white,
+    return ChangeNotifierProvider.value(
+      value: Domain(_domainName),
+      child: MaterialApp(
+        home: _defaultHome,
+        theme: ThemeData(
+          primarySwatch: Colors.purple,
+          textTheme: TextTheme(
+            button: TextStyle(
+              color: Colors.white,
+            ),
           ),
         ),
+        routes: {
+          '/login': (_) => LoginPage(title: _appName),
+        },
+        title: _appName,
       ),
-      routes: {
-        '/login': (_) => LoginPage(title: appName),
-      },
-      title: appName,
     );
   }
 }
