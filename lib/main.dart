@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import './login_page.dart';
+import './providers/token.dart';
 
 void main() => runApp(MyApp());
 
@@ -26,6 +27,9 @@ class _MyAppState extends State<MyApp> {
         Provider.value(
           value: Domain(_domainName),
         ),
+        ChangeNotifierProvider.value(
+          value: Token(),
+        )
       ],
       child: MaterialApp(
         home: _defaultHome,

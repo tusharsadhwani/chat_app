@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
 import './providers/domain.dart';
+import './providers/token.dart';
 
 class LoginPage extends StatefulWidget {
   final String title;
@@ -59,8 +60,9 @@ class _LoginPageState extends State<LoginPage> {
         throw ArgumentError("Missing token from response body");
       }
 
-      var token = data['token'];
-      print(token);
+      var token = data['token'] as String;
+      print("Token: $token");
+      Provider.of<Token>(context).setToken(token);
     } catch (e) {
       _showAlert(e, context);
     } finally {
