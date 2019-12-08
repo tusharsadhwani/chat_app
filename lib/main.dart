@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import './login_page.dart';
+import './signup_page.dart';
 import './chats_page.dart';
 import './providers/domain.dart';
 import './providers/token.dart';
@@ -44,6 +45,7 @@ class _MyAppState extends State<MyApp> {
         ),
         routes: {
           '/login': (_) => LoginPage(title: _appName),
+          '/signup': (_) => SignupPage(title: _appName),
           '/chats': (_) => ChatsPage(),
         },
         title: _appName,
