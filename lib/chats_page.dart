@@ -87,7 +87,9 @@ class _ChatsPageState extends State<ChatsPage> {
           IconButton(
             icon: Icon(Icons.add),
             tooltip: 'Join Chat',
-            onPressed: () => Navigator.of(context).pushNamed('/joinchat'),
+            onPressed: () => Navigator.of(context)
+                .pushNamed('/joinchat')
+                .then((_) => _reloadChats(context)),
           ),
         ],
       ),
