@@ -16,6 +16,7 @@ class _ChatPageState extends State<ChatPage> {
   List _args;
   List<Map<String, dynamic>> _messages;
   final _messageBox = MessageBox();
+  bool _isDisposed = false;
 
   @override
   void initState() {
@@ -23,13 +24,25 @@ class _ChatPageState extends State<ChatPage> {
     Future.delayed(Duration.zero, _setupChat);
   }
 
+  @override
+  void dispose() {
+    _isDisposed = true;
+    super.dispose();
+  }
+
   void _setupChat() {
     _args = (ModalRoute.of(context).settings.arguments as List);
     var _chatId = _args[0] as int;
-    _loadChats(context, _chatId);
+    _pollChats(context, _chatId);
+  }
+
+  void _pollChats(context, _chatId) async {
+    while (!_isDisposed) await _loadChats(context, _chatId);
   }
 
   Future<void> _loadChats(BuildContext context, int chatId) async {
+    if (_isDisposed) return;
+
     var domain = Provider.of<Domain>(context).domain;
     var token = Provider.of<Token>(context).token;
     try {
@@ -64,6 +77,7 @@ class _ChatPageState extends State<ChatPage> {
       }
     } catch (e) {
       // print(e);
+      if (_isDisposed) return;
       _showAlert(e, context);
     }
   }
