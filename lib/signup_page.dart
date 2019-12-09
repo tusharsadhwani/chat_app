@@ -136,6 +136,7 @@ class _SignupPageState extends State<SignupPage> {
                 decoration: InputDecoration(
                   labelText: 'email',
                 ),
+                focusNode: _emailFocusNode,
                 keyboardType: TextInputType.emailAddress,
                 textInputAction: TextInputAction.next,
                 onFieldSubmitted: (_) =>
@@ -159,6 +160,7 @@ class _SignupPageState extends State<SignupPage> {
                 decoration: InputDecoration(
                   labelText: 'username',
                 ),
+                focusNode: _usernameFocusNode,
                 textInputAction: TextInputAction.next,
                 onFieldSubmitted: (_) =>
                     FocusScope.of(context).requestFocus(_passwordFocusNode),
