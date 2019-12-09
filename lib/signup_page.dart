@@ -41,7 +41,7 @@ class _SignupPageState extends State<SignupPage> {
       _disableButton = true;
     });
     var domain = Provider.of<Domain>(context).domain;
-    var name = _formData['name'];
+    var name = _formData['name'].trim();
     var email = _formData['email'];
     var username = _formData['username'].trim();
     var password = _formData['password'];
@@ -128,7 +128,8 @@ class _SignupPageState extends State<SignupPage> {
                   _formData['name'] = value;
                 },
                 validator: (value) {
-                  if (value.length == 0) return "Field must not be empty";
+                  if (value.trim().length == 0)
+                    return "Field must not be empty";
                   return null;
                 },
               ),
@@ -168,6 +169,8 @@ class _SignupPageState extends State<SignupPage> {
                   _formData['username'] = value;
                 },
                 validator: (value) {
+                  if (value.trim().length == 0)
+                    return "username cannot be empty";
                   if (value.trim().contains(RegExp(r'\W')))
                     return "No whitespace allowed in username";
                   return null;

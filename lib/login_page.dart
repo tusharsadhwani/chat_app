@@ -113,6 +113,8 @@ class _LoginPageState extends State<LoginPage> {
                   _formData['username'] = value;
                 },
                 validator: (value) {
+                  if (value.trim().length == 0)
+                    return "username cannot be empty";
                   if (value.trim().contains(RegExp(r'\W')))
                     return "No whitespace allowed in username";
                   return null;
