@@ -15,6 +15,7 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   List _args;
   List<Map<String, dynamic>> _messages;
+  final _messageBox = MessageBox();
 
   @override
   void initState() {
@@ -104,6 +105,7 @@ class _ChatPageState extends State<ChatPage> {
                 timestamp: _messages[index]['timestamp'],
               ),
             ),
+      bottomSheet: _messageBox,
     );
   }
 }
@@ -139,6 +141,94 @@ class ChatMessage extends StatelessWidget {
                 ],
               ),
             ),
+    );
+  }
+}
+
+class MessageBox extends StatefulWidget {
+  @override
+  _MessageBoxState createState() => _MessageBoxState();
+}
+
+class _MessageBoxState extends State<MessageBox> {
+  var _messageController = TextEditingController();
+  var _disableButton = false;
+
+  void _sendMessage() async {
+    var _messageText = _messageController.value.text;
+    if (_messageText.length > 0) {
+      setState(() {
+        _disableButton = true;
+      });
+
+      var _args = (ModalRoute.of(context).settings.arguments as List);
+      var _chatId = _args[0] as int;
+
+      var domain = Provider.of<Domain>(context).domain;
+      var token = Provider.of<Token>(context).token;
+      try {
+        var response = await http.get(
+            '$domain/sendmessage?token=$token&chat_id=$_chatId&message=$_messageText');
+        if (response.statusCode != 200)
+          throw ArgumentError(
+              "Request returned with status code ${response.statusCode}");
+
+        var data = jsonDecode(response.body) as Map<String, dynamic>;
+        if (data.containsKey('error')) {
+          var errMsg = data.containsKey('message')
+              ? data['message']
+              : "An error occured";
+          throw ArgumentError(errMsg);
+        }
+        if (!data.containsKey('success')) {
+          throw ArgumentError("Missing success from response body");
+        }
+        _messageController.clear();
+      } catch (e) {
+        print(e);
+        _showAlert(e, context);
+      } finally {
+        setState(() {
+          _disableButton = false;
+        });
+      }
+    }
+  }
+
+  void _showAlert(e, BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text('Error'),
+        content: Text(e.toString()),
+        actions: [
+          FlatButton(
+            child: Text('OK'),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(left: 10.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              controller: _messageController,
+            ),
+          ),
+          IconButton(
+            icon: Icon(Icons.send),
+            color: Theme.of(context).primaryColor,
+            onPressed: _disableButton ? null : _sendMessage,
+          ),
+        ],
+      ),
     );
   }
 }
