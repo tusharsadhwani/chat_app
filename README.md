@@ -1,16 +1,11 @@
 # chat_app
 
-A new Flutter project.
+A simple frontend for https://github.com/tusharsadhwani/chat_api written in Flutter.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+1. Host the [chat_api](https://github.com/tusharsadhwani/chat_api) on some platform like [PythonAnywhere](https://pythonanywhere.com).
+2. Install [Flutter 1.9](https://flutter.dev/docs/get-started/install) or newer on your PC.
+3. Clone this repository and open the cloned folder in your file explorer.
+4. Edit the marked `_domainName` variable in `lib/main.dart` to be the URL of your hosted API, for eg. `https://example.pythonanywhere.com`
+5. open the folder in terminal and run command `flutter run`
